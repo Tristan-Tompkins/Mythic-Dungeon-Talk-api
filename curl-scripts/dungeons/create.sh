@@ -9,9 +9,10 @@ curl "${API}${URL_PATH}" \
   --header "Content-Type: application/json" \
   --header "Authorization: Bearer ${TOKEN}" \
   --data '{
-    "dungeons": {
-      "dungeonName": "'"${dungeonName}"'",
-      "description": "'"${description}"'"
+    "dungeon": {
+      "dungeonName": "'"${DUNGEONNAME}"'",
+      "description": "'"${DESCRIPTION}"'"
+    }
   }'
 
 echo

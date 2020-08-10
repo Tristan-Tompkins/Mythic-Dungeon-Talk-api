@@ -2,7 +2,7 @@ const express = require('express')
 
 const passport = require('passport')
 
-const Dungeon = require('../models/dungeon')
+const Dungeon = require('./../models/dungeon')
 
 const customErrors = require('../../lib/custom_errors')
 
@@ -14,48 +14,57 @@ const removeBlanks = require('../../lib/remove_blank_fields')
 
 const requireToken = passport.authenticate('bearer', { session: false })
 
-const router = express.Roter()
-// GET
-router.get('/dungeon', requireToken, (req, res, next) => {
+const router = express.Router()
+// INDEX
+router.get('/dungeons', requireToken, (req, res, next) => {
 
-  Dungeon.find()
-    .then(dungeon => {
-      return dungeon.map(dungeon => dungeon.toObject())
+  Dungeon.find({ owner: req.user.id })
+    .then(dungeons => {
+      return dungeons.map(dungeon => dungeon.toObject())
     })
-    .then(dungeon => res.status(200).json({ dungeon: dungeon }))
+    .then(dungeons => res.status(200).json({ dungeons: dungeons }))
+    .catch(next)
+})
+
+// SHOW
+router.get('/dungeons/:id', requireToken, (req, res, next) => {
+
+  Dungeon.findById(req.params.id)
+    .then(handle404)
+    .then(dungeon => res.status(200).json({ dungeon: dungeon.toObject() }))
     .catch(next)
 })
 
 // CREATE
-router.post('/dungeon', requireToken, (req, res, next) => {
+router.post('/dungeons', requireToken, (req, res, next) => {
   req.body.dungeon.owner = req.user.id
-
+  console.log(req.body.dungeon)
   Dungeon.create(req.body.dungeon)
-    .then(dungeons => {
+    .then(dungeon => {
       res.status(201).json({ dungeon: dungeon.toObject() })
     })
     .catch(next)
 })
 
 // UPDATE
-router.patch('/dungeon/:id', requireToken, removeToken, removeBlanks, (req, res, next) => {
+router.patch('/dungeons/:id', requireToken, removeBlanks, (req, res, next) => {
   delete req.body.dungeon.owner
 
   Dungeon.findById(req.params.id)
     .then(handle404)
-    .then(dungeons => {
-      requireOwnership(req, dungeons)
-      return dungeons.updateOne(req.body.dungeon)
+    .then(dungeon => {
+      requireOwnership(req, dungeon)
+      return dungeon.updateOne(req.body.dungeon)
     })
     .then(() => res.sendStatus(204))
     .catch(next)
 })
 
 // DESTROY
-router.delete('/example/:id', requireToken, (req, res, next) => {
+router.delete('/dungeons/:id', requireToken, requireOwnership, (req, res, next) => {
   Dungeon.findById(req.params.id)
     .then(handle404)
-    .then(example => {
+    .then(dungeon => {
       requireOwnership(req, dungeon)
       dungeon.deleteOne()
     })

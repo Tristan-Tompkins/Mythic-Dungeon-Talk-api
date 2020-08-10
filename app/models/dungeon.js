@@ -5,10 +5,6 @@ const dungeonSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // linkPic: {
-  //   type: URL,
-  //   required: true
-  // },
   description: {
     type: String,
     required: true
@@ -17,8 +13,9 @@ const dungeonSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+    }
   }, {
     timestamps: true
 })
-
-module.exports = mongoose.model('Dungeon', dungeonSchema)
+const Dungeon = mongoose.model('Dungeon', dungeonSchema)
+module.exports = Dungeon
