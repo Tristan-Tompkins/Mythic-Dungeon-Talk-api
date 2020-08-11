@@ -1,7 +1,6 @@
 # Mythic Dungeon Talk API
 
-This application allows the user to do x, y, and z. Maybe here's a reason why I
-wanted to do this project, or came up with this idea.
+This application will allow the user to read, create, update and delete posts. I wanted to create a website that allowed people to post about there dungeon routes they have made or saw that worked well for them or even come to look at all the other routes people have posted and try it out for themselves. There are plenty of sites out there that do this but its only a background feature. I wanted this to be strictly only be about the dungeon routes that people come up with and share it.
 
 ## Important Links
 
